@@ -5,7 +5,7 @@
 /* 10 Points */
 void ALU(unsigned A,unsigned B,char ALUControl,unsigned *ALUresult,char *Zero)
 {
-
+    
 }
 
 /* instruction fetch */
@@ -22,7 +22,6 @@ void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsi
 {
 
 }
-
 
 
 /* instruction decode */
