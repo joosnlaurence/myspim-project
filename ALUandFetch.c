@@ -45,10 +45,10 @@ void ALU(unsigned A, unsigned B, char ALUControl, unsigned* ALUresult, char* Zer
 /* 10 Points */
 int instruction_fetch(unsigned PC, unsigned* Mem, unsigned* instruction)
 {
-	// Fetch instruction from memory
+	// Check if PC is word-aligned
 	if(PC % 4 != 0) 
 		return 1;
-		
+	// Fetch instruction from memory
 	*instruction = Mem[(PC >> 2)];
 
 	if (*instruction == 0x00000000)
