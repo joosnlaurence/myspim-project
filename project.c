@@ -109,11 +109,12 @@ int instruction_decode(unsigned op, struct_controls *controls)
             break;
         case 0b101011: // sw
             controls->MemWrite = 1;
-            controls->RegDst = 2;
+            controls->RegDst = 2; // 2 == don't care
             controls->ALUOp = 0;
             break;
         case 0b001111: // lui
             controls->RegWrite = 1;
+            controls->ALUOp = 6;
             break;
         case 0b001010: // slti
             controls->ALUOp = 2;
@@ -162,9 +163,32 @@ void sign_extend(unsigned offset,unsigned *extended_value)
 
 /* ALU operations */
 /* 10 Points */
+// data1 = rs, data2 = rt
 int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigned funct,char ALUOp,char ALUSrc,unsigned *ALUresult,char *Zero)
 {
-
+    if(ALUOp == 7){
+        if(funct == 0b100000) // add
+            ALUOp = 0;
+        else if(funct == 0b100010 || funct == 0b101010 || funct == 0b101011) // sub, slt, or sltu
+            ALUOp = 1;
+        else if(funct == 0b100100) // and
+            ALUOp = 4;
+        else if(funct == 0b100101) // or
+            ALUOp = 5;
+        else
+            return 1;
+    }
+    if(ALUOp > 7 || ALUOp < 0)
+        return 1;
+    else{
+        if(ALUSrc == 0){
+            ALU(data1, data2, ALUOp, ALUresult, Zero);
+        }
+        else{
+            ALU(data1, extended_value, ALUOp, ALUresult, Zero);
+        }
+    }
+    return 0;
 }
 
 /* Read / Write Memory */
