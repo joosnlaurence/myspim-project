@@ -83,16 +83,70 @@ void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsi
 
 /* instruction decode */
 /* 15 Points */
-int instruction_decode(unsigned op,struct_controls *controls)
+int instruction_decode(unsigned op, struct_controls *controls)
 {
-
+    controls->ALUOp = 0;
+    controls->ALUSrc = 1; // Deassert if R-type or J-Type instruction
+    controls->Branch = controls->Jump = 0;
+    controls->MemRead = controls->MemtoReg = controls->MemWrite = 0;
+    controls->RegDst = controls->RegWrite = 0;
+    switch(op){
+        case 0: // R-type instruction
+            controls->RegDst = 1;
+            controls->RegWrite = 1;
+            controls->ALUOp = 7;
+            controls->ALUSrc = 0;
+            break;
+        case 0b001000: // addi
+            controls->ALUOp = 0;
+            controls->RegWrite = 1;
+            break;
+        case 0b100011: // lw
+            controls->MemRead = 1;
+            controls->MemtoReg = 1;
+            controls->RegWrite = 1;
+            controls->ALUOp = 0;
+            break;
+        case 0b101011: // sw
+            controls->MemWrite = 1;
+            controls->RegDst = 2;
+            controls->ALUOp = 0;
+            break;
+        case 0b001111: // lui
+            controls->RegWrite = 1;
+            break;
+        case 0b001010: // slti
+            controls->ALUOp = 2;
+            controls->RegWrite = 1;
+            break;
+        case 0b001011: // sltiu
+            controls->ALUOp = 3;
+            controls->RegWrite = 1;
+            break;
+        case 0b000100: // beq
+            controls->Branch = 1;
+            controls->ALUOp = 1;
+            controls->RegDst = 2;
+            controls->ALUSrc = 0;
+            break;
+        case 0b000010: // jump
+            controls->Jump = 1;
+            controls->RegDst = 2;
+            controls->MemtoReg = 2;
+            controls->ALUSrc = 2;
+            break;
+        default:
+            return 1;
+    }
+    return 0;
 }
 
 /* Read Register */
 /* 5 Points */
 void read_register(unsigned r1,unsigned r2,unsigned *Reg,unsigned *data1,unsigned *data2)
 {
-
+    *data1 = Reg[r1];
+    *data2 = Reg[r2];
 }
 
 
