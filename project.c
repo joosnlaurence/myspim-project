@@ -169,8 +169,12 @@ int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigne
     if(ALUOp == 7){
         if(funct == 0b100000) // add
             ALUOp = 0;
-        else if(funct == 0b100010 || funct == 0b101010 || funct == 0b101011) // sub, slt, or sltu
+        else if(funct == 0b100010) // sub
             ALUOp = 1;
+        else if(funct == 0b101010) // slt
+            ALUOp = 2;
+        else if(funct == 0b101011) // sltu
+            ALUOp = 3;
         else if(funct == 0b100100) // and
             ALUOp = 4;
         else if(funct == 0b100101) // or
@@ -184,9 +188,11 @@ int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigne
         if(ALUSrc == 0){
             ALU(data1, data2, ALUOp, ALUresult, Zero);
         }
-        else{
+        else if(ALUSrc == 1){
             ALU(data1, extended_value, ALUOp, ALUresult, Zero);
         }
+        else if(ALUSrc != 2)
+            return 1;
     }
     return 0;
 }
@@ -195,21 +201,43 @@ int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigne
 /* 10 Points */
 int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsigned *memdata,unsigned *Mem)
 {
-
+    
+    if(MemRead == 1){
+        if(MemWrite == 1 || ALUresult % 4 != 0) return 1;
+        *memdata = Mem[(ALUresult >> 2)];
+    }
+    else if(MemWrite == 1){
+        if(ALUresult % 4 != 0) return 1;
+        Mem[(ALUresult >> 2)] = data2;
+    }
+    return 0; 
 }
 
 
 /* Write Register */
 /* 10 Points */
+// r2 = rt, r3 = rd
 void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,char RegWrite,char RegDst,char MemtoReg,unsigned *Reg)
 {
-
+    if(RegWrite == 1){
+        unsigned dest = (RegDst == 1) ? r3 : r2;
+        unsigned data = (MemtoReg == 1) ? memdata : ALUresult;
+        
+        Reg[dest] = data;
+    }
 }
 
 /* PC update */
 /* 10 Points */
 void PC_update(unsigned jsec,unsigned extended_value,char Branch,char Jump,char Zero,unsigned *PC)
 {
-
+    *PC += 4;
+    if(Branch == 1 && Zero == 1){
+        *PC += (extended_value << 2);
+    }
+    else if(Jump == 1){
+        unsigned target_addr = (jsec << 2 ) | (*PC & 0xF0000000);
+        *PC = target_addr;
+    }
 }
 
