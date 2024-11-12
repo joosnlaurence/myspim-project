@@ -85,15 +85,123 @@ void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsi
 /* 15 Points */
 int instruction_decode(unsigned op,struct_controls *controls)
 {
+    printf("op: %u\n", op);
 
+    if(op == 0) {
+        // Asserted for R-Type
+        controls->RegDst = (char) 1;
+        printf("op is 000000\n");
+    }
+    else if(op == 8 || op == 12 || op == 13 || op == 35) {
+        // De-Asserted for I-Type
+        controls->RegDst = (char) 0;
+    }
+    else {
+        // Don't care
+        controls->RegDst = (char) 2;
+    }
+
+    if(op == 2 || op == 3) {
+        // Asserted for jump instructions
+        controls->Jump = (char) 1;
+    }
+    else {
+        // De-Asserted for non-jump instructions
+        controls->Jump = (char) 0;
+    }
+
+    if(op == 4) {
+        // Asserted for BEQ
+        controls->Branch = (char) 1;
+    }
+    else {
+        // De-Asserted otherwise
+        controls->Branch = (char) 0;
+    }
+
+    if(op == 35) {
+        // Asserted for LW
+        controls->MemRead = (char) 1;
+    }
+    else {
+        // De-Asserted otherwise
+        controls->MemRead = (char) 0;
+    }
+
+    if(op == 43) {
+        // Asserted for SW
+        controls->MemWrite = (char) 1;
+    }
+    else {
+        // De-Asserted Otherwise
+        controls->MemWrite = (char) 0;
+    }
+
+    if(op == 35) {
+        // Asserted for LW
+        controls->MemtoReg = (char) 1;
+    }
+    else {
+        // De-Asserted otherwise
+        controls->MemtoReg = (char) 0;
+    }
+
+    if(op == 0 || op == 4) {
+        // De-asserted for R-Types and BEQ
+        controls->ALUSrc = (char) 0;
+    }
+    else {
+        // Asserted otherwise
+        controls->ALUSrc = (char) 1;
+    }
+
+    if (op ==  0 || op == 8 || op == 12 || op == 13 || op == 35) {
+        // Asserted for R-types, addi, andi, ori, lw
+        controls->RegWrite = (char) 1;
+    }
+    else {
+        // De-Asserted otherwise
+        controls->RegWrite = (char) 0;
+    }
+
+    // addition or don't care
+    if(op == 9) {
+        controls->ALUOp = (char) 0;
+    }
+    // set less than
+    else if(op == 10) {
+        controls->ALUOp = (char) 2;
+    }
+    // set less than unsigned
+    else if(op == 11) {
+        controls->ALUOp = (char) 3;
+    }
+    // AND
+    else if(op == 12) {
+        controls->ALUOp = (char) 4;
+    }
+    // OR
+    else if(op == 13) {
+        controls->ALUOp = (char) 5;
+    }
+    // R-type Instruction
+    else if(op == 0) {
+        controls->ALUOp = (char) 7;
+    }
+    else {
+        return 1;
+    }
+    return 0;
 }
 
 /* Read Register */
 /* 5 Points */
 void read_register(unsigned r1,unsigned r2,unsigned *Reg,unsigned *data1,unsigned *data2)
 {
-
+    data1 = Reg[r1];
+    data2 = Reg[r2];
 }
+
 
 
 /* Sign Extend */
