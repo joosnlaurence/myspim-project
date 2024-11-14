@@ -240,4 +240,3 @@ void PC_update(unsigned jsec,unsigned extended_value,char Branch,char Jump,char 
         *PC = target_addr;
     }
 }
-
