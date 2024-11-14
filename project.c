@@ -253,7 +253,6 @@ void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,
         unsigned value = (MemtoReg == 1) ? memdata : ALUresult;
         Reg[destination] = value;
     }
-
 }
 
 /* PC update */
@@ -265,7 +264,7 @@ void PC_update(unsigned jsec,unsigned extended_value,char Branch,char Jump,char 
     if (Branch == 1 && Zero == 1) {
         *PC += (extended_value << 2);
     }
-    if (Jump == 1) {
+    else if (Jump == 1) {
         *PC = (*PC & 0xF0000000) | (jsec << 2);
     }
 
