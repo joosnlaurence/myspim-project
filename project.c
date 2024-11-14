@@ -248,6 +248,11 @@ int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsig
 /* 10 Points */
 void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,char RegWrite,char RegDst,char MemtoReg,unsigned *Reg)
 {
+	if (RegWrite == 1) {
+        unsigned destination = (RegDst == 1) ? r3 : r2;
+        unsigned value = (MemtoReg == 1) ? memdata : ALUresult;
+        Reg[destination] = value;
+    }
 
 }
 
@@ -255,6 +260,14 @@ void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,
 /* 10 Points */
 void PC_update(unsigned jsec,unsigned extended_value,char Branch,char Jump,char Zero,unsigned *PC)
 {
+	*PC += 4;
+
+    if (Branch == 1 && Zero == 1) {
+        *PC += (extended_value << 2);
+    }
+    if (Jump == 1) {
+        *PC = (*PC & 0xF0000000) | (jsec << 2);
+    }
 
 }
 
