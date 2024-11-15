@@ -231,18 +231,54 @@ void sign_extend(unsigned offset,unsigned *extended_value)
 
 /* ALU operations */
 /* 10 Points */
-int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigned funct,char ALUOp,char ALUSrc,unsigned *ALUresult,char *Zero)
+int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigned funct,char ALUOp,char ALUSrc,unsigned *ALUresult,char *Zero) 
 {
 
+    if (ALUSrc == 0) {
+        if (funct == 0x24) { 
+            ALUOp = 4;
+        }
+        else if (funct == 0x2a) { 
+            ALUOp = 2;
+        }
+        else if (funct == 0x2b) { 
+            ALUOp = 3;
+        }
+        else if (funct == 0x23) { 
+            ALUOp = 1;
+        }
+        else if (funct == 0x21) {
+            ALUOp = 0;
+        }
+        else {
+            return 1;
+        }
+
+        ALU(data1, data2, ALUOp, ALUresult, Zero);
+    }
+    
+    else if (ALUSrc == 1) {
+        ALU(data1, extended_value, ALUOp, ALUresult, Zero);
+    }
+    return 0;
 }
 
 /* Read / Write Memory */
 /* 10 Points */
-int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsigned *memdata,unsigned *Mem)
+int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsigned *memdata,unsigned
 {
 
+    if ((MemWrite || MemRead) && ALUresult % 4 != 0) {
+        return 1;
+    }
+    if (MemWrite) {
+        Mem[ALUresult >> 2] = data2;
+    }
+    if (MemRead) {
+        *memdata = Mem[ALUresult >> 2];
+    }
+    return 0;
 }
-
 
 /* Write Register */
 /* 10 Points */
