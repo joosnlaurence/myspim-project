@@ -235,19 +235,22 @@ int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigne
 {
 
     if (ALUSrc == 0) {
-        if (funct == 0x24) { 
+        if(funct == 0b100110){ // or
+	    ALUOp = 5;
+	}
+	else if (funct == 0x24) { // and
             ALUOp = 4;
         }
-        else if (funct == 0x2a) { 
+        else if (funct == 0x2a) { // slt
             ALUOp = 2;
         }
-        else if (funct == 0x2b) { 
+        else if (funct == 0x2b) { // sltu
             ALUOp = 3;
         }
-        else if (funct == 0x23) { 
+        else if (funct == 0x22) { // sub
             ALUOp = 1;
         }
-        else if (funct == 0x21) {
+        else if (funct == 0x20) { // add 
             ALUOp = 0;
         }
         else {
@@ -265,7 +268,7 @@ int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigne
 
 /* Read / Write Memory */
 /* 10 Points */
-int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsigned *memdata,unsigned
+int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsigned *memdata, unsigned *Mem)
 {
   if ((MemWrite || MemRead) && (ALUresult % 4 != 0)) {
         return 1; 
