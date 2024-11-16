@@ -235,22 +235,22 @@ int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigne
 {
 
     if (ALUSrc == 0) {
-        if(funct == 0b100110){ // or
+        if(funct == 0b100101){ // or
 	    ALUOp = 5;
-	}
-	else if (funct == 0x24) { // and
+	    }
+	    else if (funct == 0b100100) { // and
             ALUOp = 4;
         }
-        else if (funct == 0x2a) { // slt
+        else if (funct == 0b101010) { // slt
             ALUOp = 2;
         }
-        else if (funct == 0x2b) { // sltu
+        else if (funct == 0b101011) { // sltu
             ALUOp = 3;
         }
-        else if (funct == 0x22) { // sub
+        else if (funct == 0b100010) { // sub
             ALUOp = 1;
         }
-        else if (funct == 0x20) { // add 
+        else if (funct == 0b100000) { // add 
             ALUOp = 0;
         }
         else {
