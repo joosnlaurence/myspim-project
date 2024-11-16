@@ -85,13 +85,10 @@ void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsi
 /* 15 Points */
 int instruction_decode(unsigned op,struct_controls *controls)
 {
-    //printf("op: %u\n", op);
     char isValid = 9; // If > 0, then opcode matches at least one instruction
-    
     if(op == 0) {
         // Asserted for R-Type
         controls->RegDst = (char) 1;
-        //printf("op is 000000\n");
     }
     // addi, slti, sltiu, lui, and lw
     else if(op == 0b001000 || op == 0b001010 || op == 0b001011 || 
@@ -205,8 +202,10 @@ int instruction_decode(unsigned op,struct_controls *controls)
         isValid--;
         controls->ALUOp = 0;
     }
-    if(!isValid)
+    if(!isValid){
+        
         return 1;
+    }
     return 0;
 }
 
@@ -234,7 +233,7 @@ void sign_extend(unsigned offset,unsigned *extended_value)
 int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigned funct,char ALUOp,char ALUSrc,unsigned *ALUresult,char *Zero) 
 {
 
-    if (ALUSrc == 0) {
+    if (ALUOp == 7) {
         if(funct == 0b100101){ // or
 	        ALUOp = 5;
 	    }
@@ -256,13 +255,16 @@ int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigne
         else {
             return 1;
         }
-
+    }
+    if(ALUSrc == 0){
         ALU(data1, data2, ALUOp, ALUresult, Zero);
     }
-    
     else if (ALUSrc == 1) {
         ALU(data1, extended_value, ALUOp, ALUresult, Zero);
     }
+    else if (ALUSrc != 2)
+        return 1;
+
     return 0;
 }
 
