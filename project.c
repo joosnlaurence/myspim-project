@@ -236,7 +236,7 @@ int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigne
 
     if (ALUSrc == 0) {
         if(funct == 0b100101){ // or
-	    ALUOp = 5;
+	        ALUOp = 5;
 	    }
 	    else if (funct == 0b100100) { // and
             ALUOp = 4;
