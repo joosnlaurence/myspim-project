@@ -3,6 +3,7 @@
 
 /* ALU */
 /* 10 Points */
+// By: Kobi Corney
 void ALU(unsigned A,unsigned B,char ALUControl,unsigned *ALUresult,char *Zero)
 {
     //add
@@ -43,6 +44,7 @@ void ALU(unsigned A,unsigned B,char ALUControl,unsigned *ALUresult,char *Zero)
 
 /* instruction fetch */
 /* 10 Points */
+// By: Kobi Corney
 int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
 {
     // Check if PC is word-aligned
@@ -61,6 +63,7 @@ int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
 
 /* instruction partition */
 /* 10 Points */
+// By: Jason Laureano
 void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsigned *r2, unsigned *r3, unsigned *funct, unsigned *offset, unsigned *jsec)
 {
     unsigned op_mask = 0xFC000000; // instruction [31-26]
@@ -83,6 +86,7 @@ void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsi
 
 /* instruction decode */
 /* 15 Points */
+// By: Lydia Emmons
 int instruction_decode(unsigned op,struct_controls *controls)
 {
     char isValid = 9; // If > 0, then opcode matches at least one instruction
@@ -211,6 +215,7 @@ int instruction_decode(unsigned op,struct_controls *controls)
 
 /* Read Register */
 /* 5 Points */
+// By: Lydia Emmons
 void read_register(unsigned r1,unsigned r2,unsigned *Reg,unsigned *data1,unsigned *data2)
 {
     *data1 = Reg[r1];
@@ -220,6 +225,7 @@ void read_register(unsigned r1,unsigned r2,unsigned *Reg,unsigned *data1,unsigne
 
 /* Sign Extend */
 /* 10 Points */
+// By: Jason Laureano
 void sign_extend(unsigned offset,unsigned *extended_value)
 {
     if((offset >> 15) == 1)
@@ -230,6 +236,7 @@ void sign_extend(unsigned offset,unsigned *extended_value)
 
 /* ALU operations */
 /* 10 Points */
+// By: Mateo Garcia
 int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigned funct,char ALUOp,char ALUSrc,unsigned *ALUresult,char *Zero) 
 {
 
@@ -270,6 +277,7 @@ int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigne
 
 /* Read / Write Memory */
 /* 10 Points */
+// By: Mateo Garcia
 int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsigned *memdata, unsigned *Mem)
 {
   if ((MemWrite || MemRead) && (ALUresult % 4 != 0)) {
@@ -286,6 +294,7 @@ int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsig
 
 /* Write Register */
 /* 10 Points */
+// By: Luis Caballero
 void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,char RegWrite,char RegDst,char MemtoReg,unsigned *Reg)
 {
 	if (RegWrite == 1) {
@@ -297,6 +306,7 @@ void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,
 
 /* PC update */
 /* 10 Points */
+// By: Luis Caballero
 void PC_update(unsigned jsec,unsigned extended_value,char Branch,char Jump,char Zero,unsigned *PC)
 {
 	*PC += 4;
