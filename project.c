@@ -164,11 +164,16 @@ int instruction_decode(unsigned op,struct_controls *controls)
         // De-asserted for R-Types and BEQ
         controls->ALUSrc = (char) 0;
     }
-    else {
+    else if(op == 0b000010){
+        // Don't care for jump
+        controls->ALUSrc = (char) 2;
+    }
+    else{
         // Asserted otherwise
         controls->ALUSrc = (char) 1;
         isValid--;
     }
+
     
     if (op == 0b000000 || op == 0b001000 || op == 0b001010 || 
         op == 0b001011 || op == 0b001111 || op == 0b100011) {
